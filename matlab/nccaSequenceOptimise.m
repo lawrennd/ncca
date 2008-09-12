@@ -43,7 +43,7 @@ end
 
 model = model_obs;
 model.dynamics = model_trans;
-model.dynamicsBalancing = balancing;
+model.dynamics.balancing = balancing;
 
 options = optOptions;
 if(display)

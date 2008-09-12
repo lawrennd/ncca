@@ -44,6 +44,51 @@ if(nargin<6)
 end
 
 % check input arguments
+
+if(length(data_var_keep)>1)
+  if(isinteger(data_var_keep(1)))
+    cut_off_y = data_var_keep(1);
+  else
+    cut_off_y = data_var_keep(1)/100;
+  end
+  if(isinteger(data_var_keep(2)))
+    cut_off_z = data_var_keep(2);
+  else
+    cut_off_z = data_var_keep(2)/100;
+  end
+else
+  if(isinteger(data_var_keep))
+    cut_off_y = data_var_keep;
+    cut_off_z = data_var_keep;
+  else
+    cut_off_y = data_var_keep/100;
+    cut_off_z = data_var_keep/100;
+  end
+end
+clear data_var_keep;
+
+if(length(consolidation_var_keep)>1)
+  if(~isinteger(consolidation_var_keep(1)))
+    consolidation_var_keep_y = consolidation_var_keep(1)/100;
+  else
+    consolidation_var_keep_y = consolidation_var_keep(1); 
+  end
+  if(~isinteger(consolidation_var_keep(2)))
+    consolidation_var_keep_z = consolidation_var_keep(2)/100;
+  else
+    consolidation_var_keep_z = consolidation_var_keep(2);
+  end
+else
+  if(~isinteger(consolidation_var_keep))
+    consolidation_var_keep_y = consolidation_var_keep/100;
+    consolidation_var_keep_z = consolidation_var_keep/100;
+  else
+    consolidation_var_keep_y = consolidation_var_keep;
+    consolidation_var_keep_z = consolidation_var_keep;
+  end
+end
+clear consolidation_var_keep;
+  
 if(size(Y,1)~=size(Z,1))
   error('Different number of observations in Y and Z');
 end
@@ -60,7 +105,7 @@ else
     fprintf(';-----------------------------------;\n');
     fprintf('Y given in terms of points\n');
   end
-  Ky = cov(Y');
+  Ky = Y*Y';
   clear Y;
 end
 if(size(Z,1)==size(Z,2))
@@ -75,7 +120,7 @@ else
     fprintf('Z given in terms of Points\n');
     fprintf(';-----------------------------------;\n');
   end
-  Kz = cov(Z');
+  Kz = Z*Z';
   clear Z;
 end
 
@@ -98,15 +143,24 @@ Vy = Vy(:,ind);
 [lambda_z,ind] = sort(lambda_z,'descend');
 Vz = Vz(:,ind);
 
-cut_off = data_var_keep/100;
 c_lambda_y = cumsum(lambda_y);
 c_lambda_z = cumsum(lambda_z);
 
-nr_feature_basis_y = length(find(c_lambda_y<cut_off))+1;
-nr_feature_basis_z = length(find(c_lambda_z<cut_off))+1;
+if(isinteger(cut_off_y))
+  nr_feature_basis_y = cut_off_y;
+else
+  nr_feature_basis_y = length(find(c_lambda_y<cut_off_y))+1;
+end
+if(isinteger(cut_off_z))
+  nr_feature_basis_z = cut_off_z;
+else
+  nr_feature_basis_z = length(find(c_lambda_z<cut_off_z))+1;
+end
+  
 clear c_lambda_y;
 clear c_lambda_z;
-clear cut_off;
+clear cut_off_y;
+clear cut_off_z;
 
 if(verbose)
   fprintf(';-----------------------------------;\n');
@@ -151,81 +205,107 @@ alpha_y = alpha_y(:,ind);
 [lambda_z,ind] = sort(lambda_z,'descend');
 alpha_z = alpha_z(:,ind);
 
-
 % Re-represent shared space with dominant cannonical components
-cut_off = shared_var_keep/100;
-nr_shared_basis = length(find(lambda_y>cut_off));
-if(nr_shared_basis==0)
-  nr_shared_basis = 1;
-  if(verbose)
-    fprintf(';-----------------------------------;\n');
-    fprintf('No Shared Basis Explains %3.0f of the shared variance\n',shared_var_keep);
-    fprintf('Forcing the Shared Dimensionality to one in order to proceed\n');
-    fprintf(';-----------------------------------;\n');
+if(~isinteger(shared_var_keep))
+  cut_off = shared_var_keep/100;
+  nr_shared_basis = length(find(lambda_y>cut_off));
+  if(nr_shared_basis==0)
+    nr_shared_basis = 1;
+    if(verbose)
+      fprintf(';-----------------------------------;\n');
+      fprintf('No Shared Basis Explains %3.0f of the shared variance\n',shared_var_keep);
+      fprintf('Forcing the Shared Dimensionality to one in order to proceed\n');
+      fprintf(';-----------------------------------;\n');
+    end
   end
+else
+  nr_shared_basis = double(shared_var_keep);
 end
-alpha_y = alpha_y(:,1:1:nr_shared_basis);
-alpha_z = alpha_z(:,1:1:nr_shared_basis);
+alpha_y = alpha_y(:,1:1:min([size(alpha_y,2) nr_shared_basis]));
+alpha_z = alpha_z(:,1:1:min([size(alpha_z,2) nr_shared_basis]));
 
-% NCCA in PCA space
-beta_y = [];
-beta_z = [];
-for(i = 1:1:nr_feature_basis_y-nr_shared_basis)
-  beta_y(:,i) = ncca_lin(Cyy,[alpha_y beta_y],true);
-end
-for(i = 1:1:nr_feature_basis_z-nr_shared_basis)
-  beta_z(:,i) = ncca_lin(Czz,[alpha_z beta_z],true);
-end
+% NCCA in original space
 
-% enforce orthogonality
-%tmp = cgrscho([alpha_y beta_y]);
-%alpha_y = tmp(:,1:1:size(alpha_y,2));
-%beta_y = tmp(:,size(alpha_y,2)+1:1:end);
-%tmp = cgrscho([alpha_z beta_z]);
-%alpha_z = tmp(:,1:1:size(alpha_z,2));
-%beta_z = tmp(:,size(alpha_z,2)+1:1:end);
-%clear tmp;
-
-% Directions in Kernel induced or Feature Space
-%alpha_y = Ay*alpha_y;
-%alpha_z = Az*alpha_z;
-%beta_y = Ay*beta_y;
-%beta_z = Az*beta_z;
-
-% enforce orthogonality
-%tmp = cgrscho([alpha_y beta_y]);
-%alpha_y = tmp(:,1:1:size(alpha_y,2));
-%beta_y = tmp(:,size(alpha_y,2)+1:1:end);
-%tmp = cgrscho([alpha_z beta_z]);
-%alpha_z = tmp(:,1:1:size(alpha_z,2));
-%beta_z = tmp(:,size(alpha_z,2)+1:1:end);
-%clear tmp;
+alpha_y = Ay*alpha_y;
+alpha_z = Az*alpha_z;
+Kyy = Ky'*Ky;
+Kzz = Kz'*Kz;
 
 % normalise
 alpha_y = normalise_vector(alpha_y);
 alpha_z = normalise_vector(alpha_z);
+
+beta_y = [];
+beta_z = [];
+Ny_consolidation = sum(diag(alpha_y'*Kyy*alpha_y))/trace(Kyy);
+Nz_consolidation = sum(diag(alpha_z'*Kzz*alpha_z))/trace(Kzz);
+if(~isinteger(consolidation_var_keep_y))
+  if(consolidation_var_keep_y>1)
+    warning('Cannot keep more than ALL the variance in the data\n');
+    consolidation_var_keep_y = 0.99;
+  end
+  while(Ny_consolidation<consolidation_var_keep_y||isempty(beta_y))
+    tmp = ncca_lin(Kyy,[alpha_y beta_y],true);
+    tmp = normalise_vector(tmp);
+    beta_y = [beta_y tmp];
+    Ny_consolidation = sum(diag([beta_y alpha_y]'*Kyy*[beta_y alpha_y]))/trace(Kyy);    
+  end
+else
+  for(i = 1:1:min(size(Kyy,1)-nr_shared_basis,consolidation_var_keep_y))
+    beta_y(:,i) = ncca_lin(Kyy,[alpha_y beta_y],true);
+  end  
+end
+if(~isinteger(consolidation_var_keep_z))
+  if(consolidation_var_keep_z>1)
+    warning('Cannot keep more than ALL the variance in the data\n');
+    consolidation_var_keep_z = 0.99;
+  end
+  while(Nz_consolidation<consolidation_var_keep_z||isempty(beta_z))
+    tmp = ncca_lin(Kzz,[alpha_z beta_z],true);
+    tmp = normalise_vector(tmp);
+    beta_z = [beta_z tmp];
+    Nz_consolidation = sum(diag([beta_z alpha_z]'*Kzz*[beta_z alpha_z]))/trace(Kzz);
+  end
+else
+  for(i = 1:1:min(size(Kzz,1)-nr_shared_basis,consolidation_var_keep_z))
+    beta_z(:,i) = ncca_lin(Kzz,[alpha_z beta_z],true);
+  end
+end
+if(verbose)
+  fprintf(';-----------------------------------;\n');
+  fprintf('NCCA reduction:\n');
+  fprintf('Y:\t %dD\n',size(beta_y,2));
+  fprintf('Z:\t %dD\n',size(beta_z,2));
+  fprintf(';-----------------------------------;\n');     
+end
+
+
+% normalise
 beta_y = normalise_vector(beta_y);
 beta_z = normalise_vector(beta_z);
 
 % reduce dimensionality of independent spaces
-Ny_shared = sum(diag(alpha_y'*Cyy*alpha_y))/trace(Cyy);
-Nz_shared = sum(diag(alpha_z'*Czz*alpha_z))/trace(Czz);
+Ny_shared = sum(diag(alpha_y'*Kyy*alpha_y))/trace(Kyy);
+Nz_shared = sum(diag(alpha_z'*Kzz*alpha_z))/trace(Kzz);
 
-lambda_y = diag(beta_y'*Cyy*beta_y);
-lambda_z = diag(beta_z'*Czz*beta_z);
-
+if(~isempty(beta_y))
+  lambda_y = diag(beta_y'*Kyy*beta_y);
+else
+  lambda_y = [];
+end
+if(~isempty(beta_z))
+  lambda_z = diag(beta_z'*Kzz*beta_z);
+else
+  lambda_z = [];
+end
+  
 c_lambda_y = cumsum(lambda_y)+Ny_shared;
 c_lambda_z = cumsum(lambda_z)+Nz_shared;
 
-cut_off = (consolidation_var_keep/(data_var_keep/100))/100;
-nr_basis_independent_y = min(length(find(c_lambda_y<cut_off))+1,length(c_lambda_y));
-nr_basis_independent_z = min(length(find(c_lambda_z<cut_off))+1,length(c_lambda_z));
-
-beta_y = beta_y(:,1:1:nr_basis_independent_y);
-beta_z = beta_z(:,1:1:nr_basis_independent_z);
-
-Ny_independent = sum(diag(beta_y'*Cyy*beta_y))/trace(Cyy);
-Nz_independent = sum(diag(beta_z'*Czz*beta_z))/trace(Czz);
+nr_basis_independent_y = size(beta_y,2);
+nr_basis_independent_z = size(beta_z,2);
+Ny_independent = sum(diag(beta_y'*Kyy*beta_y))/trace(Kyy);
+Nz_independent = sum(diag(beta_z'*Kzz*beta_z))/trace(Kzz);
 
 if(verbose)
   fprintf(';-----------------------------------;\n');
@@ -243,10 +323,18 @@ if(verbose)
 end
 
 % Embeddings
-Xsy = Ky*(Ay*alpha_y);
-Xsz = Kz*(Az*alpha_z);
-Xy = Ky*(Ay*beta_y);
-Xz = Kz*(Az*beta_z);
+Xsy = Ky*alpha_y;
+Xsz = Kz*alpha_z;
+if(~isempty(beta_y))
+  Xy = Ky*beta_y;
+else
+  Xy = [];
+end
+if(~isempty(beta_z))
+  Xz = Kz*beta_z;
+else
+  Xz = [];
+end
 
 return
 
@@ -301,6 +389,12 @@ if(~isreal(lambda))
   V = V(:,ind);
 end
 
+% force orthogonality
+V = cgrscho(V);
+
+% recompute "eigenvalues" with modified "eigenvector"
+lambda = diag(V'*A*V);
+
 % normalise and sort
 lambda = lambda./sum(lambda);
 [lambda ind] = sort(lambda,'descend');
@@ -325,4 +419,3 @@ if(~isempty(dim))
 end
 
 return
-
