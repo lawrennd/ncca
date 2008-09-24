@@ -1,4 +1,4 @@
-function options = nccaOptions(approx)
+function options = nccaOptions(approx,kern_options)
 
 % NCCAOPTIONS Return default options for NCCA model.
 % FORMAT
@@ -8,6 +8,8 @@ function options = nccaOptions(approx)
 % 'dtc' (deterministic training conditional), 'fitc' (fully
 % independent training conditional) or 'pitc' (partially
 % independent training conditional).
+% ARG kern_options : kernel options, either 'standard' (rbf compund
+% kernel) or 'ard' (ARD compund rbf kernel)
 % RETURN options : option structure
 %
 % SEEALSO : nccaCreate, gpOptions
@@ -16,13 +18,26 @@ function options = nccaOptions(approx)
 
 % NCCA
 
-if(nargin<1)
-  approx = 'ftc';
+if(nargin<2)
+  kern_options = 'ard';
+  if(nargin<1)
+    approx = 'ftc';
+  end
 end
 
 options = gpOptions(approx);
 options.optimiser = 'scg';
 options.scale2var1 = true;
-options.kern = {'cmpnd','rbfard','linard','bias','white'};
 
+switch kern_options
+ case 'ard'
+  options.kern = {'cmpnd','rbfard','bias','white'};
+ case 'standard'
+  options.kern = {'cmpnd','rbf','bias','white'};
+ case 'linard'
+  options.kern = {'cmpnd','linard','bias','white'};
+ otherwise
+  error('Unkown Kernel Type');
+end
+  
 return

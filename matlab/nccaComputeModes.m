@@ -1,4 +1,4 @@
-function X = nccaComputeModes(model_g,model_f,Y,nr_nn,display)
+function X = nccaComputeModes(model_g,model_f,Y,nr_nn,display,nr_iters)
 
 % NCCACOMPUTEMODES Compute modes over latent space from NCCA model
 % FORMAT
@@ -26,7 +26,11 @@ if(isempty(dim_independent))
 end
 
 opt_options = optOptions;
-opt_options(14) = 100;
+if(exist('nr_iters','var'))
+  opt_options(14) = nr_iters;
+else
+  opt_options(14) = 100;
+end
 opt_options(9) = false;
 opt_options(1) = false;
 

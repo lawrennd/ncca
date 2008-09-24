@@ -25,7 +25,7 @@ if(display)
 end
 for(i = 1:1:size(X,1))
   Obs(:,i) = ones(size(Obs,1),1)*gpPointLogLikelihood(model_g,Y(i,:),X{i}(1,dim_shared));
-  for(j = 1:1:size(X{1},1))
+  for(j = 1:1:size(X{i},1))
     [mu varSigma] = gpPosteriorMeanVar(model_f,X{i}(j,:));
     ll = -0.5*sum(log(2*pi)+log(varSigma));
     Obs(j,i) = Obs(j,i)+ll;
