@@ -1,5 +1,11 @@
 function ind = nccaAddData(model,Y,ratio)
 
+% NCCAADDDATA
+%
+% COPYRIGHT : Carl Henrik Ek, 2008
+
+% NCCA
+
 if(size(Y,2)==size(model.fy.y,2))
   input_type = 'Y';
 elseif(size(Y,2)==size(model.fz.y,2))

@@ -1,5 +1,11 @@
 function [C X Y fhandle]= nccaDisplayPrivate(model,x,type,N,display,display2,fid)
 
+% NCCADISPLAYPRIVATE
+%
+% COPYRIGHT : Carl Henrik Ek, 2008
+
+% NCCA
+
 if(nargin<7)
   fid = 1;
   if(nargin<6)

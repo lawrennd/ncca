@@ -1,5 +1,12 @@
 function X = nccaRemoveMultipleModes(model,X,ratio,type)
 
+% NCCAREMOVEMULTIPLEMODES
+%
+%
+% COPYRIGHT : Carl Henrik Ek, 2008
+
+% NCCA
+
 if(nargin<4)
   type = 'euclidian';
   if(nargin<3)

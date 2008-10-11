@@ -1,5 +1,10 @@
 function [C X Y] = nccaDisplayLatent(model,x,type,N,display)
 
+% NCCADISPLAYLATENT
+%
+% COPYRIGHT : Carl Henrik Ek, 2008
+
+% NCCA
 
 if(nargin<5)
   display = false;

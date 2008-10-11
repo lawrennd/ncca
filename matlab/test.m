@@ -11,7 +11,7 @@ Z = rand(100,15);
 model = modelCreate('ncca',[],[],Y,Z);
 
 % add dynamic model
-options = gpOptions;
+options = gpOptions('ftc');
 model = nccaAddDynamics(model,'gp','YZ',options);
 
 % train model 
