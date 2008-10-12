@@ -2,9 +2,7 @@ function model = nccaCreate(void1,void2,Y,Z,data_var_keep,shared_var_keep,consol
 
 % NCCACREATE Create a NCCA model
 % FORMAT
-% DESC 	MODEL = NCCACREATE(void, void,
-% Y,Z,DATA_VAR_KEEP,SHARED_VAR_KEEP,CONSOLIDATION_VAR_KEEP,SHARED_SPACE,OPTIONS)
-% creates a NCCA model structure with default parameter settings as
+% DESC creates a NCCA model structure with default parameter settings as
 % specified by the options vector.
 % ARG void : for compatibility
 % ARG void : for compatibility
@@ -27,7 +25,7 @@ function model = nccaCreate(void1,void2,Y,Z,data_var_keep,shared_var_keep,consol
 %
 % SEEALSO : nccaOptions, nccaCreate, modelCreate
 %
-% COPYRIGHT : Neil D. Lawrence, Carl Henrik Ek, 2007
+% COPYRIGHT : Neil D. Lawrence and Carl Henrik Ek, 2007
 
 % NCCA
 

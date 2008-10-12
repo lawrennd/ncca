@@ -1,8 +1,6 @@
 function ind = nccaAddData(model,Y,ratio)
 
 % NCCAADDDATA
-%
-% COPYRIGHT : Carl Henrik Ek, 2008
 
 % NCCA
 

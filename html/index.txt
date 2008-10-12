@@ -1,0 +1,19 @@
+<head>
+<title>Non Consolidating Components Analysis - MATLAB Software</title>
+</head>
+
+<body><div class="section">
+
+<h1>NCCA Software</h1>
+
+<p>This page describes examples of how to use the non-consolidating components analysis software (NCCA).
+
+RELEASEINFORMATION
+
+<h2>Release Notes</h2>
+
+<h3>Current Release</h3>
+
+First public release with limited documentation
+
+

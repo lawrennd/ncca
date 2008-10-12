@@ -1,7 +1,6 @@
 function Trans = computeTransT(model,X,normalise,display)
 
-% COPMUTETRANST Compute Transitional Probabilities for sequence of
-% modes from ncca model
+% COMPUTETRANST Compute Transitional Probabilities for sequence of modes from ncca model
 % FORMAT
 % DESC Computes a Translation matrix for a sequence of mode from a
 % ncca model
@@ -13,7 +12,7 @@ function Trans = computeTransT(model,X,normalise,display)
 %
 % SEEALSO : NULL
 %
-% COPYRIGHT : Neil D. Lawrence, Carl Henrik Ek, 2007
+% COPYRIGHT : Neil D. Lawrence and Carl Henrik Ek, 2007
 
 % NCCA
 

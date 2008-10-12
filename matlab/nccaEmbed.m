@@ -2,9 +2,7 @@ function [Xsy Xsz Xy Xz] = nccaEmbed(Y,Z,data_var_keep,shared_var_keep,consolida
 
 % NCCAEMBED Consolidate two data sets using NCCA
 % FORMAT
-% DESC  [Xsy Xsz Xy Xz] =
-% nccaEmbed(Y,Z,data_var_keep,shared_var_keep,consolidation_var_keep,VERBOSE)
-% creates a NCCA model structure with default parameter settings as
+% DESC  creates a NCCA model structure with default parameter settings as
 % specified by the options vector.
 % ARG Y : Observations in space 1 (either in form on Kernel or
 % Datapoints (in which case linear algorithm will be applied)
@@ -23,7 +21,7 @@ function [Xsy Xsz Xy Xz] = nccaEmbed(Y,Z,data_var_keep,shared_var_keep,consolida
 %
 % SEEALSO : NCCACREATE, NCCAOPTIMISE
 %
-% COPYRIGHT : Neil D. Lawrence, Carl Henrik Ek, 2007
+% COPYRIGHT : Neil D. Lawrence and Carl Henrik Ek, 2007
 
 % NCCA
 

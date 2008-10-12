@@ -1,10 +1,8 @@
 function X = nccaComputeViterbiPath(model_obs_in,model_obs_out,model_dyn,X_mode,Y,balancing,display)
 
-% NCCACOMPUTEVITERBIPATH Computes Viterbi path through a set of
-% latent modes given model with dynamic
-% FORMAT
-% DESC X =
-% nccaComputeViterbiPath(model_obs_in,model_obs_out,model_dyn,X_mode,Y,display)
+% NCCACOMPUTEVITERBIPATH Computes Viterbi path through a set of latent modes given model with dynamics
+% FORMAT 
+% DESC computes Viterbi path through a set of latent modes given model with dynamics.
 % ARG model_obs_in : observation space model onto shared latent
 % space
 % ARG model_obs_out : observation space generation model
@@ -16,10 +14,9 @@ function X = nccaComputeViterbiPath(model_obs_in,model_obs_out,model_dyn,X_mode,
 % ARG display : display progress (default = false)
 % RETURN X : Modes associated with Viterbi path
 %
-% SEEALSO : computeObs.m, computeTransT.m,
-% viterbi_path_log_transT.m
+% SEEALSO : computeObs.m, computeTransT.m, viterbi_path_log_transT.m
 %
-% COPYRIGHT : Neil D. Lawrence, Carl Henrik Ek, 2007
+% COPYRIGHT : Neil D. Lawrence and Carl Henrik Ek, 2007
 
 % NCCA
 

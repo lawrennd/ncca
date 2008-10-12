@@ -11,9 +11,7 @@ function Obs = computeObs(model_g,model_f,X,Y,display)
 % ARG display : display progress
 % RETURN Obs : Model log likelihood Matrix
 %
-% SEEALSO : NULL
-%
-% COPYRIGHT : Neil D. Lawrence, Carl Henrik Ek, 2007
+% COPYRIGHT : Neil D. Lawrence and Carl Henrik Ek, 2007
 
 % NCCA
 

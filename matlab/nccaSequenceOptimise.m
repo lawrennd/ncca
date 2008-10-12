@@ -2,8 +2,7 @@ function X = nccaSequenceOptimise(model_in,model_obs,model_trans,X,type,iters,ba
 
 % NCCASEQUENCEOPTIMISE Jointly optimise sequence and observations
 % FORMAT
-% DESC X =
-% nccaSequenceOptimise(model_in,model_obs,model_trans,X,type,iters,balancing,display)
+% DESC 
 % ARG model_in : observation model onto shared latent space
 % ARG model_obs : model generating output domain
 % ARG model_trans : dynamic model
@@ -21,7 +20,7 @@ function X = nccaSequenceOptimise(model_in,model_obs,model_trans,X,type,iters,ba
 %
 % SEEALSO : nccaComputeModes, nccaComputeViterbiPath
 %
-% COPYRIGHT : Neil D. Lawrence, Carl Henrik Ek, 2007
+% COPYRIGHT : Neil D. Lawrence and Carl Henrik Ek, 2007
 
 % NCCA
 
