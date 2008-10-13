@@ -1,5 +1,11 @@
 function handle = pointVisualise(pos,fid,X,dot_size)
 
+% POINTVISUALISE
+%
+% COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
+
+% NCCA
+
 if(nargin<4)
   dot_size = 30;
   if(nargin<2)

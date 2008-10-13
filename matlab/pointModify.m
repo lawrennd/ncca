@@ -1,5 +1,11 @@
 function handle = pointModify(handle,pos,X)
 
+% POINTMODIFY
+%
+% COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
+
+% NCCA
+
 if(nargin>=3)
   pos = [pos; X];
 end

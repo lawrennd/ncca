@@ -1,5 +1,12 @@
 function Xc = nccaVisualise(model,Ylbls,visualiseFunction,visualiseModify,x,type,N,Y,display)
 
+% NCCAVISUALISE
+%
+% COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
+%
+
+% NCCA
+
 
 if(nargin<7)
   N = 20;

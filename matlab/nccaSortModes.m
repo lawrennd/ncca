@@ -1,5 +1,12 @@
 function [X ll] = nccaSortModes(model,X)
 
+% NCCASORTMODES
+%
+% COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
+
+% NCCA
+
+
 if(nargin<2)
   error('Too Few Arguments');
 end
