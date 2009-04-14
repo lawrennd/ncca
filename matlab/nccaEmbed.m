@@ -233,50 +233,8 @@ Kzz = Kz'*Kz;
 alpha_y = normalise_vector(alpha_y);
 alpha_z = normalise_vector(alpha_z);
 
-beta_y = [];
-beta_z = [];
-Ny_consolidation = sum(diag(alpha_y'*Kyy*alpha_y))/trace(Kyy);
-Nz_consolidation = sum(diag(alpha_z'*Kzz*alpha_z))/trace(Kzz);
-if(~isinteger(consolidation_var_keep_y))
-  if(consolidation_var_keep_y>1)
-    warning('Cannot keep more than ALL the variance in the data\n');
-    consolidation_var_keep_y = 0.99;
-  end
-  while(Ny_consolidation<consolidation_var_keep_y||isempty(beta_y))
-    tmp = ncca_lin(Kyy,[alpha_y beta_y],true);
-    tmp = normalise_vector(tmp);
-    beta_y = [beta_y tmp];
-    Ny_consolidation = sum(diag([beta_y alpha_y]'*Kyy*[beta_y alpha_y]))/trace(Kyy);    
-  end
-else
-  for(i = 1:1:min(size(Kyy,1)-nr_shared_basis,consolidation_var_keep_y))
-    beta_y(:,i) = ncca_lin(Kyy,[alpha_y beta_y],true);
-  end  
-end
-if(~isinteger(consolidation_var_keep_z))
-  if(consolidation_var_keep_z>1)
-    warning('Cannot keep more than ALL the variance in the data\n');
-    consolidation_var_keep_z = 0.99;
-  end
-  while(Nz_consolidation<consolidation_var_keep_z||isempty(beta_z))
-    tmp = ncca_lin(Kzz,[alpha_z beta_z],true);
-    tmp = normalise_vector(tmp);
-    beta_z = [beta_z tmp];
-    Nz_consolidation = sum(diag([beta_z alpha_z]'*Kzz*[beta_z alpha_z]))/trace(Kzz);
-  end
-else
-  for(i = 1:1:min(size(Kzz,1)-nr_shared_basis,consolidation_var_keep_z))
-    beta_z(:,i) = ncca_lin(Kzz,[alpha_z beta_z],true);
-  end
-end
-if(verbose)
-  fprintf(';-----------------------------------;\n');
-  fprintf('NCCA reduction:\n');
-  fprintf('Y:\t %dD\n',size(beta_y,2));
-  fprintf('Z:\t %dD\n',size(beta_z,2));
-  fprintf(';-----------------------------------;\n');     
-end
-
+beta_y = nccaExtract(Ky,alpha_y,consolidation_var_keep_y,verbose);
+beta_z = nccaExtract(Kz,alpha_z,consolidation_var_keep_z,verbose);
 
 % normalise
 beta_y = normalise_vector(beta_y);
